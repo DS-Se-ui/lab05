@@ -1,0 +1,63 @@
+import random
+
+# Board size constants
+BOARD_SIZE = 100
+LADDERS = {3: 22, 5: 8, 11: 26, 20: 29, 17: 4, 19: 7, 21: 9, 27: 1, 19: 23}
+SNAKES = {27: 1, 21: 9, 19: 7, 17: 4}
+
+# Initial positions of players
+player1_pos = 0
+player2_pos = 0
+
+# Function to simulate dice roll
+def roll_dice():
+    return random.randint(1, 6)
+
+# Function to move player based on dice roll
+def move_player(player, dice_roll):
+    new_position = player + dice_roll
+    if new_position > BOARD_SIZE:
+        return player
+    return new_position
+
+# Function to check if the player has landed on a ladder or snake
+def check_for_snakes_or_ladders(player):
+    if player in LADDERS:
+        print(f"Ladder! Moving from {player} to {LADDERS[player]}")
+        return LADDERS[player]
+    elif player in SNAKES:
+        print(f"Snake! Moving from {player} to {SNAKES[player]}")
+        return SNAKES[player]
+    return player
+
+# Main game loop
+def play_game():
+    global player1_pos, player2_pos
+    turn = 1  # Player 1 starts
+
+    while player1_pos < BOARD_SIZE and player2_pos < BOARD_SIZE:
+        if turn == 1:
+            print(f"\nPlayer 1's turn:")
+            dice_roll = roll_dice()
+            print(f"Player 1 rolled a {dice_roll}")
+            player1_pos = move_player(player1_pos, dice_roll)
+            player1_pos = check_for_snakes_or_ladders(player1_pos)
+            print(f"Player 1's new position: {player1_pos}")
+            turn = 2  # Switch to Player 2
+        else:
+            print(f"\nPlayer 2's turn:")
+            dice_roll = roll_dice()
+            print(f"Player 2 rolled a {dice_roll}")
+            player2_pos = move_player(player2_pos, dice_roll)
+            player2_pos = check_for_snakes_or_ladders(player2_pos)
+            print(f"Player 2's new position: {player2_pos}")
+            turn = 1  # Switch to Player 1
+
+    # Declare the winner
+    if player1_pos >= BOARD_SIZE:
+        print("\nPlayer 1 wins!")
+    else:
+        print("\nPlayer 2 wins!")
+
+if __name__ == "__main__":
+    play_game()
